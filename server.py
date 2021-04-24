@@ -2,6 +2,8 @@ import time
 
 from flask import Flask, request, abort
 from NLPBot.bot import bot
+import BC.blockchain as bc
+import pymysql
 app = Flask(__name__)
 
 @app.route("/")
@@ -44,6 +46,23 @@ def get_message():
         'Answer': bot(text),
     }
 
+@app.route("/confirm_event")
+def confirm_event():
+    # должен передаваться ИД мероприятия
+    data = request.json
+    # подключаюсь к БД
+    #Адрес, #Пользователь, #Пароль, #Имя БД
+    connection = pymysql.connect(host="", user="", password="", database="")
+    # делаем запрос к табличке EventCompetence
+    curs = connection.cursor()
+    # curs.execute("SELECT * FROM EventCompetence WHERE idevent=%s",  data["event_id"])
+    curs.execute("Текст запроса")
+    # сохраняем результат
+    rows = curs.fetchall()
+    # проходим по всем записям результата
+    for row in rows:
+        # будем вызывать функцию bc.append_blockchain()
+        print(" {0} {1} {2} ".format(row[0], row[1], row[2]))
 
 
 app.run()
